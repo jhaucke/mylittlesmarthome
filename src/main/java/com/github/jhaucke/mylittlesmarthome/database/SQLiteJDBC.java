@@ -40,8 +40,7 @@ public class SQLiteJDBC {
 			logger.error("message: " + e.getMessage() + " cause: " + e.getCause());
 			e.printStackTrace();
 		} catch (SQLException e) {
-			logger.error("state: " + e.getSQLState() + " code: " + e.getErrorCode() + " message: " + e.getMessage()
-					+ " cause: " + e.getCause());
+			logger.error(createLogMessage(e));
 		}
 
 		logger.info("opened database successfully");
@@ -54,8 +53,7 @@ public class SQLiteJDBC {
 			stmt.executeUpdate(sql);
 			stmt.close();
 		} catch (SQLException e) {
-			logger.error("state: " + e.getSQLState() + " code: " + e.getErrorCode() + " message: " + e.getMessage()
-					+ " cause: " + e.getCause());
+			logger.error(createLogMessage(e));
 		}
 		logger.info("power record created successfully");
 	}
@@ -72,8 +70,7 @@ public class SQLiteJDBC {
 			rs.close();
 			stmt.close();
 		} catch (SQLException e) {
-			logger.error("state: " + e.getSQLState() + " code: " + e.getErrorCode() + " message: " + e.getMessage()
-					+ " cause: " + e.getCause());
+			logger.error(createLogMessage(e));
 		}
 		logger.info("last 3 minutes selected");
 		return last3Minutes;
@@ -91,8 +88,7 @@ public class SQLiteJDBC {
 			rs.close();
 			stmt.close();
 		} catch (SQLException e) {
-			logger.error("state: " + e.getSQLState() + " code: " + e.getErrorCode() + " message: " + e.getMessage()
-					+ " cause: " + e.getCause());
+			logger.error(createLogMessage(e));
 		}
 		logger.info("current state of actuator selected");
 		return actuatorStateId;
@@ -107,9 +103,13 @@ public class SQLiteJDBC {
 			// AutoCommit
 			stmt.close();
 		} catch (SQLException e) {
-			logger.error("state: " + e.getSQLState() + " code: " + e.getErrorCode() + " message: " + e.getMessage()
-					+ " cause: " + e.getCause());
+			logger.error(createLogMessage(e));
 		}
 		logger.info("state of actuator successfully updated");
+	}
+
+	private String createLogMessage(SQLException e) {
+		return "state: " + e.getSQLState() + " code: " + e.getErrorCode() + " message: " + e.getMessage() + " cause: "
+				+ e.getCause();
 	}
 }
