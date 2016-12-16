@@ -35,7 +35,7 @@ public class SQLiteJDBC {
 			Class.forName("org.sqlite.JDBC");
 			Properties config = new Properties();
 			config.put("journal_mode", "WAL");
-			c = DriverManager.getConnection("jdbc:sqlite:../smarthome.db", config);
+			c = DriverManager.getConnection("jdbc:sqlite:smarthome.db", config);
 		} catch (ClassNotFoundException e) {
 			logger.error("message: " + e.getMessage() + " cause: " + e.getCause());
 			e.printStackTrace();
@@ -55,7 +55,7 @@ public class SQLiteJDBC {
 		} catch (SQLException e) {
 			logger.error(createLogMessage(e));
 		}
-		logger.info("power record created successfully");
+		logger.debug("power record created successfully");
 	}
 
 	public List<Integer> selectTheLast3Minutes(int actuatorId) {
@@ -72,7 +72,7 @@ public class SQLiteJDBC {
 		} catch (SQLException e) {
 			logger.error(createLogMessage(e));
 		}
-		logger.info("last 3 minutes selected");
+		logger.debug("last 3 minutes selected");
 		return last3Minutes;
 	}
 
@@ -90,7 +90,7 @@ public class SQLiteJDBC {
 		} catch (SQLException e) {
 			logger.error(createLogMessage(e));
 		}
-		logger.info("current state of actuator selected");
+		logger.debug("current state of actuator selected");
 		return actuatorStateId;
 	}
 
@@ -105,7 +105,7 @@ public class SQLiteJDBC {
 		} catch (SQLException e) {
 			logger.error(createLogMessage(e));
 		}
-		logger.info("state of actuator successfully updated");
+		logger.debug("state of actuator successfully updated");
 	}
 
 	private String createLogMessage(SQLException e) {

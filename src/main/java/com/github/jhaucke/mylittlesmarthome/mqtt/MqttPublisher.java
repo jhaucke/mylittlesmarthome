@@ -28,9 +28,9 @@ public class MqttPublisher {
 	 */
 	public synchronized static void sendMessage(String topic, String content) {
 
-		String newLine = System.getProperty("line.separator");
+		String newLine = System.lineSeparator();
 		final int qos = 2;
-		final String broker = "tcp://localhost:1883";
+		final String broker = "tcp://smarthome:1883";
 		final String clientId = "MyLittleSmarthomeServer";
 		MemoryPersistence persistence = new MemoryPersistence();
 
@@ -38,17 +38,17 @@ public class MqttPublisher {
 			MqttClient sampleClient = new MqttClient(broker, clientId, persistence);
 			MqttConnectOptions connOpts = new MqttConnectOptions();
 			connOpts.setCleanSession(true);
-			logger.info("Connecting to broker: " + broker);
+			logger.debug("Connecting to broker: " + broker);
 			sampleClient.connect(connOpts);
-			logger.info("Connected");
-			logger.info("Publishing message: " + content);
+			logger.debug("Connected");
+			logger.debug("Publishing message: " + content);
 			content = new SimpleDateFormat("HH:mm:ss").format(new Date()) + " - " + content;
 			MqttMessage message = new MqttMessage(content.getBytes());
 			message.setQos(qos);
 			sampleClient.publish(topic, message);
-			logger.info("Message published");
+			logger.debug("Message published");
 			sampleClient.disconnect();
-			logger.info("Disconnected");
+			logger.debug("Disconnected");
 		} catch (MqttException me) {
 			logger.error("Reason: " + me.getReasonCode() + newLine + "Msg: " + me.getMessage() + newLine + "Cause: "
 					+ me.getCause() + newLine + "Exception: " + me);

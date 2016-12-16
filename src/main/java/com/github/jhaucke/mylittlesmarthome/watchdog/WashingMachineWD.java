@@ -12,16 +12,24 @@ import com.github.jhaucke.mylittlesmarthome.database.constants.Actuator;
 import com.github.jhaucke.mylittlesmarthome.database.constants.ActuatorState;
 import com.github.jhaucke.mylittlesmarthome.mqtt.MqttPublisher;
 
+import de.saxsys.mvvmfx.MvvmFX;
+import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
+import javafx.application.Platform;
+
 /**
  * {@link Runnable} to monitor the power consumption of the washing machine to
  * determine in which state it is.
  */
 public class WashingMachineWD implements Runnable {
 
+	public static final String WASHER_STATE_CHANGED = "WasherStateChanged";
+
 	private final Logger logger;
 
 	private HttpInterface httpInterface;
 	private Actuator washingMachine;
+
+	private NotificationCenter notificationCenter;
 
 	/**
 	 * Constructor for {@link WashingMachineWD}.
@@ -37,6 +45,7 @@ public class WashingMachineWD implements Runnable {
 
 		this.httpInterface = httpInterface;
 		this.washingMachine = washingMachine;
+		this.notificationCenter = MvvmFX.getNotificationCenter();
 	}
 
 	@Override
@@ -65,33 +74,44 @@ public class WashingMachineWD implements Runnable {
 			if (currentActuatorState != null && switchState != null) {
 				if (switchState.equals("0") && currentActuatorState.intValue() != ActuatorState.OFF.getValue()) {
 					MqttPublisher.sendMessage(topic, ActuatorState.OFF.toString());
+					notifyWasherStateChanged(ActuatorState.OFF);
 					db.updateStateOfActuator(washingMachine.getValue(), ActuatorState.OFF.getValue());
 				}
 				if (switchState.equals("1") && currentActuatorState.intValue() == ActuatorState.OFF.getValue()) {
 					MqttPublisher.sendMessage(topic, ActuatorState.ON.toString());
+					notifyWasherStateChanged(ActuatorState.ON);
 					db.updateStateOfActuator(washingMachine.getValue(), ActuatorState.ON.getValue());
 				}
 				if (switchState.equals("1") && currentActuatorState.intValue() != ActuatorState.ACTIVE.getValue()
 						&& isWashingMachineActive) {
-					MqttPublisher.sendMessage(topic,
-							ActuatorState.ACTIVE.toString());
+					MqttPublisher.sendMessage(topic, ActuatorState.ACTIVE.toString());
+					notifyWasherStateChanged(ActuatorState.ACTIVE);
 					db.updateStateOfActuator(washingMachine.getValue(), ActuatorState.ACTIVE.getValue());
 				}
 				if (switchState.equals("1") && currentActuatorState.intValue() == ActuatorState.ACTIVE.getValue()
 						&& !isWashingMachineActive) {
-					MqttPublisher.sendMessage(topic,
-							ActuatorState.FINISHED.toString());
+					MqttPublisher.sendMessage(topic, ActuatorState.FINISHED.toString());
+					notifyWasherStateChanged(ActuatorState.FINISHED);
 					db.updateStateOfActuator(washingMachine.getValue(), ActuatorState.FINISHED.getValue());
 				}
 			}
 
 			try {
-				Thread.sleep(15000);
+				Thread.sleep(30000);
 			} catch (InterruptedException ie) {
 				logger.error(ie.getMessage());
 			}
 		}
 
+	}
+
+	private void notifyWasherStateChanged(ActuatorState state) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				notificationCenter.publish(WASHER_STATE_CHANGED, state);
+			}
+		});
 	}
 
 }

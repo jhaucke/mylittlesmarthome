@@ -13,6 +13,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<pi.host>smarthome</pi.host>
+		<pi.deployPath>...</pi.deployPath>
+		<pi.user>...</pi.user>
+		<pi.password>...</pi.password>
 	</properties>
 
 	<repositories>
@@ -37,9 +41,6 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
-					<finalName>${project.name}</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
-					<outputDirectory>../uber-jar</outputDirectory>
 				</configuration>
 				<executions>
 					<execution>
@@ -50,6 +51,47 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<configuration>
+							<target>
+								<!-- run a command on the remote server (here mkdir) -->
+								<sshexec command="mkdir -p ${pi.deployPath}" host="${pi.host}"
+									password="${pi.password}" port="22" trust="true" username="${pi.user}"></sshexec>
+								<!-- copy the shaded jar to the raspberry pi on install -->
+								<scp failonerror="true"
+									todir="${pi.user}:${pi.password}@${pi.host}:${pi.deployPath}"
+									trust="true">
+									<fileset
+										file="${project.basedir}/target/${project.artifactId}-${project.version}-jar-with-dependencies.jar">
+									</fileset>
+								</scp>
+								<!-- run a command on the remote server (run jar file) -->
+								<sshexec
+									command="sudo java -jar ${pi.deployPath}/${project.artifactId}-${project.version}-jar-with-dependencies.jar"
+									host="${pi.host}" password="${pi.password}" port="22" trust="true"
+									username="${pi.user}"></sshexec>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant-jsch</artifactId>
+						<version>1.9.7</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
@@ -63,7 +105,12 @@
 		<dependency>
 			<groupId>de.saxsys</groupId>
 			<artifactId>mvvmfx</artifactId>
-			<version>1.5.0</version>
+			<version>1.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>de.saxsys</groupId>
+			<artifactId>mvvmfx-guice</artifactId>
+			<version>1.5.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xerial</groupId>
@@ -73,8 +120,29 @@
 		<dependency>
 			<groupId>org.eclipse.paho</groupId>
 			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-			<version>1.0.2</version>
+			<version>1.1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.retrofit2</groupId>
+			<artifactId>retrofit</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.retrofit2</groupId>
+			<artifactId>converter-gson</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -83,12 +151,12 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>2.5</version>
+			<version>2.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.5</version>
+			<version>2.6.1</version>
 		</dependency>
 
 		<dependency>

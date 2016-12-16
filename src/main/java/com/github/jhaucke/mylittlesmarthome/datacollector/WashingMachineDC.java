@@ -48,7 +48,7 @@ public class WashingMachineDC implements Runnable {
 					String switchPower = httpInterface.getSwitchPower(ainWashingMachine);
 					db.insertPowerData(washingMachine.getValue(), Integer.valueOf(switchPower));
 				}
-				Thread.sleep(10000);
+				Thread.sleep(20000);
 			} catch (NumberFormatException | InterruptedException | IOException e) {
 				logger.error(e.getMessage());
 			}

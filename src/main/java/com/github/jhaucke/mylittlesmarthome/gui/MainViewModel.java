@@ -1,22 +1,19 @@
 package com.github.jhaucke.mylittlesmarthome.gui;
 
-import de.saxsys.mvvmfx.ViewModel;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import com.github.jhaucke.mylittlesmarthome.service.hue.HueService;
+import com.google.inject.Inject;
 
+import de.saxsys.mvvmfx.ViewModel;
+
+/**
+ * The {@link ViewModel} of {@link MainView}.
+ */
 public class MainViewModel implements ViewModel {
 
-	private StringProperty helloMessage = new SimpleStringProperty("Hello World");
+	@Inject
+	private HueService hueService;
 
-	public StringProperty helloMessage() {
-		return helloMessage;
-	}
-
-	public String getHelloMessage() {
-		return helloMessage.get();
-	}
-
-	public void setHelloMessage(String message) {
-		helloMessage.set(message);
+	public void switchLight() {
+		hueService.switchLight(3);
 	}
 }

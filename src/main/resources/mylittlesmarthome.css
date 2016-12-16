@@ -1,0 +1,25 @@
+/* My little Smarthome Styles */
+
+.pane {
+    -fx-background-color: #e3f2fd;
+}
+
+.button {
+    -fx-background-color: #ffeb3b;
+    -fx-background-radius: 3.5em;
+}
+
+.popup-dialog {
+  -fx-opacity: 0.8;
+  -fx-effect: dropshadow(three-pass-box, derive(cadetblue, -20%), 10, 0, 4, 4);
+  -fx-padding: 0;
+  -fx-spacing: 0;
+  -fx-alignment: center;
+  -fx-font-size: 20;
+  -fx-background-color: #e3f2fd;
+  -fx-border-width: 5;
+  -fx-background-insets: 12;
+  -fx-border-insets: 10;
+  -fx-border-radius: 6;
+  -fx-background-radius: 6;
+}

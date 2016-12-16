@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" alignment="CENTER"
-    fx:controller="com.github.jhaucke.mylittlesmarthome.gui.MainView">
-  <children>
-    <Label fx:id="helloLabel"/>
-  </children>
-  <padding>
-    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-  </padding>
-</VBox>
+<Pane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="480.0" minWidth="800.0" styleClass="pane" stylesheets="@../../../../../mylittlesmarthome.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.jhaucke.mylittlesmarthome.gui.MainView">
+   <children>
+      <GridPane alignment="CENTER" hgap="10.0" layoutX="50.0" layoutY="120.0" minHeight="240.0" minWidth="700.0" vgap="10.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="lightSwitchBtn" alignment="CENTER" minHeight="200.0" minWidth="200.0" mnemonicParsing="false" onMouseClicked="#onLightSwitchBtnClicked" GridPane.columnIndex="0" />
+            <Button fx:id="wifiBtn" alignment="CENTER" minHeight="200.0" minWidth="200.0" mnemonicParsing="false" onMouseClicked="#onWiFiBtnClicked" GridPane.columnIndex="1" />
+            <Button fx:id="washerBtn" alignment="CENTER" minHeight="200.0" minWidth="200.0" mnemonicParsing="false" onMouseClicked="#onWasherBtnClicked" GridPane.columnIndex="2" />
+         </children>
+      </GridPane>
+      <Label fx:id="timeLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="633.0" layoutY="15.0" prefHeight="30.0" prefWidth="150.0">
+         <font>
+            <Font name="SansSerif Bold" size="20.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>
